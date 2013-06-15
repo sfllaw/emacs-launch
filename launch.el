@@ -217,13 +217,13 @@ can be produced by `dired-get-marked-files', for example."
 
 ;; Install the keymap as an override in dired-mode buffers.
 (eval-after-load 'dired
-  (progn
-    (defun launch-dired-remap ()
-      "Override `launch-mode-map' in `dired-mode'."
-      (push `(launch-mode . ,launch-mode-dired-map)
-            minor-mode-overriding-map-alist))
+  '(progn
+     (defun launch-dired-remap ()
+       "Override `launch-mode-map' in `dired-mode'."
+       (push `(launch-mode . ,launch-mode-dired-map)
+             minor-mode-overriding-map-alist))
 
-    (add-hook 'dired-mode-hook 'launch-dired-remap)))
+     (add-hook 'dired-mode-hook 'launch-dired-remap)))
 
 
 ;;; vc-dir
@@ -263,13 +263,13 @@ can be produced by `vc-dir-marked-files', for example."
 
 ;; Install the keymap as an override in vc-dir-mode buffers.
 (eval-after-load 'vc-dir
-  (progn
-    (defun launch-vc-dir-remap ()
-      "Override `launch-mode-map' in `vc-dir-mode'."
-      (push `(launch-mode . ,launch-mode-vc-dir-map)
-            minor-mode-overriding-map-alist))
+  '(progn
+     (defun launch-vc-dir-remap ()
+       "Override `launch-mode-map' in `vc-dir-mode'."
+       (push `(launch-mode . ,launch-mode-vc-dir-map)
+             minor-mode-overriding-map-alist))
 
-    (add-hook 'vc-dir-mode-hook 'launch-vc-dir-remap)))
+     (add-hook 'vc-dir-mode-hook 'launch-vc-dir-remap)))
 
 
 (provide 'launch)
