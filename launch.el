@@ -4,7 +4,7 @@
 
 ;; Author: Simon Law <sfllaw@sfllaw.ca>
 ;; URL: https://github.com/sfllaw/emacs-launch
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; Created: 12 Jun 2012
 ;; Keywords: convenience processes
 
