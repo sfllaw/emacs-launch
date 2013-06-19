@@ -128,7 +128,7 @@ nil)."
     (let ((process-connection-type nil)
           (process nil))
       (setq process
-            (start-process "launcher" nil
+            (start-process "*launcher*" nil
                            launch-program (expand-file-name filename)))
       (set-process-sentinel process 'launch--abnormal-exit)
       `(,process . nil))))
@@ -212,7 +212,7 @@ nil)."
              (if (assoc "needsterminal" mime-info)
                  (setq buffer
                        (generate-new-buffer (file-name-nondirectory filename))))
-             (setq process (start-process-shell-command "launcher" buffer
+             (setq process (start-process-shell-command "*launcher*" buffer
                                                         shell-command))
              (set-process-sentinel process 'launch--abnormal-exit)
              `(,process . ,buffer)))
