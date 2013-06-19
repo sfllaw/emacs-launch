@@ -106,7 +106,11 @@ with the user."
 
 ;;;###autoload
 (defun launch-file (filename)
-  "Launch FILENAME using its associated program."
+  "Launch FILENAME using its associated program.
+
+Return (process . buffer), where process is the process object of
+the associated program, and buffer is the buffer object (or
+nil)."
   (interactive
    (let ((file buffer-file-name)
          (file-name nil)
@@ -119,15 +123,23 @@ with the user."
             "Launch file: " file-dir file t file-name))))
   (when (null launch-program)
       (error "%s" "`launch-program' not defined."))
-  (let ((process-connection-type nil))
-    (start-process "launcher" nil
-                   launch-program (expand-file-name filename))))
+  (let ((process-connection-type nil)
+        (process nil))
+    (setq process
+          (start-process "launcher" nil
+                         launch-program (expand-file-name filename)))
+    (set-process-sentinel process 'launch--abnormal-exit)
+    `(,process . nil))
 
 ;;;###autoload
 (defun launch-directory (dirname-or-filename)
   "Launch the file manager for DIRNAME-OR-FILENAME.
 
-If DIRNAME-OR-FILENAME is a file, launch its directory."
+If DIRNAME-OR-FILENAME is a file, launch its directory.
+
+Return (process . buffer), where process is the process object of
+the associated program, and buffer is the buffer object (or
+nil)."
   (interactive
    (list (read-directory-name
           "Launch directory: " nil default-directory t nil)))
