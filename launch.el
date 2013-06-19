@@ -85,7 +85,9 @@
         (t (or (executable-find "xdg-open")
                (executable-find "exo-open")
                (executable-find "kde-open")
-               (executable-find "gnome-open"))))
+               (executable-find "gnome-open")
+               (executable-find "run-mailcap")
+               "")))
   "Program to use as a launcher."
   :group 'launch
   :type 'string)
