@@ -88,7 +88,9 @@
                (executable-find "gnome-open")
                (executable-find "run-mailcap")
                "")))
-  "Program to use as a launcher."
+  "Program to use as a launcher.
+
+If an empty string, use the built-in mailcap library."
   :group 'launch
   :type 'string)
 
@@ -121,15 +123,15 @@ nil)."
                 file-dir (file-name-directory file))))
      (list (read-file-name
             "Launch file: " file-dir file t file-name))))
-  (when (null launch-program)
-      (error "%s" "`launch-program' not defined."))
-  (let ((process-connection-type nil)
-        (process nil))
-    (setq process
-          (start-process "launcher" nil
-                         launch-program (expand-file-name filename)))
-    (set-process-sentinel process 'launch--abnormal-exit)
-    `(,process . nil))
+  (if (string= launch-program "")
+      (launch-file-default-command filename)
+    (let ((process-connection-type nil)
+          (process nil))
+      (setq process
+            (start-process "launcher" nil
+                           launch-program (expand-file-name filename)))
+      (set-process-sentinel process 'launch--abnormal-exit)
+      `(,process . nil))))
 
 ;;;###autoload
 (defun launch-directory (dirname-or-filename)
@@ -161,6 +163,66 @@ number of files."
                                  (length file-list))))
               (t))
       (mapc 'launch-file file-list)))
+
+(defun launch--abnormal-exit (process event)
+  "Display a error message when associated program exits abnormally.
+
+PROCESS and EVENT are provided by `set-process-sentinel'."
+  (when (string-prefix-p "exited abnormally" event)
+    (message "%s %s"
+             launch-program
+             (replace-regexp-in-string "\n$" "" event))))
+
+
+;;;; MIME
+
+;; Provided by mailcap
+(declare-function mailcap-parse-mailcaps "mailcap.el" nil)
+(declare-function mailcap-parse-mimetypes "mailcap.el" nil)
+(declare-function mailcap-extension-to-mime "mailcap.el" (extn))
+(declare-function mailcap-mime-info "mailcap.el"
+                  (string &optional request no-decode))
+
+(defun launch-mime-info (filename)
+  "Get the MIME viewer information for FILENAME.
+
+See `mailcap-mime-data' for details on the mailcap structure."
+  (require 'mailcap)
+  (mailcap-parse-mailcaps)
+  (mailcap-parse-mimetypes)
+  (let* ((extension (file-name-extension filename t))
+         (mime-type (mailcap-extension-to-mime extension)))
+    (mailcap-mime-info mime-type 1 t)))
+
+(defun launch-file-default-command (filename)
+  "Launch FILENAME using its associated program, using mailcap.
+
+Return (process . buffer), where process is the process object of
+the associated program, and buffer is the buffer object (or
+nil)."
+  (let* ((mime-info (launch-mime-info filename))
+         (viewer (cdr (assoc 'viewer mime-info))))
+    (cond ((stringp viewer)             ; viewer is a shell command
+           (let ((process-connection-type nil)
+                 (process nil)
+                 (buffer nil)
+                 (shell-command
+                  (replace-regexp-in-string "%s" (expand-file-name filename)
+                                            viewer t t)))
+             (if (assoc "needsterminal" mime-info)
+                 (setq buffer
+                       (generate-new-buffer (file-name-nondirectory filename))))
+             (setq process (start-process-shell-command "launcher" buffer
+                                                        shell-command))
+             (set-process-sentinel process 'launch--abnormal-exit)
+             `(,process . ,buffer)))
+
+          ((fboundp viewer)             ; viewer is a major mode
+           (let ((buffer (find-file filename)))
+             (funcall viewer)
+             `(nil . ,buffer)))
+
+          (t (error "Unknown viewer: %s" viewer)))))
 
 
 ;;;; Mode
