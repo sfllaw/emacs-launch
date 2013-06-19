@@ -4,7 +4,7 @@
 
 ;; Author: Simon Law <sfllaw@sfllaw.ca>
 ;; URL: https://github.com/sfllaw/emacs-launch
-;; Version: 1.0.1
+;; Version: 1.1.0
 ;; Created: 12 Jun 2012
 ;; Keywords: convenience processes
 
@@ -40,7 +40,6 @@
 ;; file-associations to launch the appropriate program for a particular
 ;; file.
 
-
 ;;; Installation:
 
 ;; Launch is available from MELPA <http://melpa.milkbox.net/>.
@@ -61,10 +60,17 @@
 ;; Inside special buffers like `dired' or `vc-dir', launch marked files using
 ;; C-c ! !. To just launch the default directory itself, use C-c ! d.
 
+;;; Change Log:
+
+;; Changes from 1.0 to 1.1:
+
+;; * Falls back to mailcap under *nix if xdg-open and friends don't exist.
+
 ;;; Bugs:
 
 ;; Please report bugs to http://github.com/sfllaw/emacs-launch/issues
 
+;; * This library has only been tested on Emacs 24.3. Pull requests welcome.
 ;; * This library is untested on Windows or Mac OS X. Pull requests welcome.
 
 ;;; Code:

@@ -42,6 +42,14 @@ Inside special buffers like *dired* or *vc-dir*, launch marked files using
 `C-c ! !`. To just launch the default directory itself, use `C-c ! d`.
 
 
+Change Log
+----------
+
+Changes from 1.0 to 1.1:
+
+* Falls back to mailcap under *nix if xdg-open and friends don't exist.
+
+
 Bugs
 ----
 
