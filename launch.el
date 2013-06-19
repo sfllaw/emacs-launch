@@ -160,8 +160,8 @@ the mode if ARG is omitted or nil.
 
 Turning on launch-mode will add keybindings for `launch-file' and
 `launch-directory'."
-  :keymap '(("\C-c!!" . launch-file)
-            ("\C-c!d" . launch-directory)))
+  :keymap '(("\C-c&&" . launch-file)
+            ("\C-c&d" . launch-directory)))
 
 ;;;###autoload
 (defun turn-on-launch-mode ()
@@ -208,8 +208,8 @@ can be produced by `dired-get-marked-files', for example."
 ;; Provide a special keymap for dired-mode
 (defvar launch-mode-dired-map
   (easy-mmode-define-keymap
-   '(("\C-c!!" . launch-files-dired)
-     ("\C-c!d" . launch-directory-dired))
+   '(("\C-c&&" . launch-files-dired)
+     ("\C-c&d" . launch-directory-dired))
    nil
    nil
    '(:inherit launch-mode-map))
@@ -254,8 +254,8 @@ can be produced by `vc-dir-marked-files', for example."
 ;; Provide a special keymap for vc-dir-mode
 (defvar launch-mode-vc-dir-map
   (easy-mmode-define-keymap
-   '(("\C-c!!" . launch-files-vc-dir)
-     ("\C-c!d" . launch-directory-vc-dir))
+   '(("\C-c&&" . launch-files-vc-dir)
+     ("\C-c&d" . launch-directory-vc-dir))
    nil
    nil
    '(:inherit launch-mode-map))
