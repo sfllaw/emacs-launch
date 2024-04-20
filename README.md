@@ -20,7 +20,7 @@ file.
 Installation
 ------------
 
-**Launch** is available from [MELPA](http://melpa.milkbox.net/).
+**Launch** is available from [MELPA](https://melpa.org/).
 Just run `M-x package-install` and install `launch`.
 
 Then, in your `~/.emacs` configuration, add:
